@@ -11,21 +11,13 @@
 // ──────────────────────────────────────────────────────────────────────────
 
 export const PLAYERS = [
-  { name: 'BERBATOV',    position: 'ST',  nation: '🇧🇬', club: 'Man Utd',     ovr: 84, tier: 'silver', sofifaId: 1179,   fifaVersion: 17 },
-  { name: 'CROUCH',      position: 'ST',  nation: '🏴󠁧󠁢󠁥󠁮󠁧󠁿', club: 'Stoke',       ovr: 77, tier: 'bronze', sofifaId: 9014,   fifaVersion: 17 },
-  { name: 'VAN DER SAR', position: 'GK',  nation: '🇳🇱', club: 'Man Utd',     ovr: 86, tier: 'gold',   sofifaId: 1625,   fifaVersion: 15 },
   { name: 'LAMPARD',     position: 'CM',  nation: '🏴󠁧󠁢󠁥󠁮󠁧󠁿', club: 'Chelsea',     ovr: 87, tier: 'gold',   sofifaId: 5471,   fifaVersion: 17 },
-  { name: 'PIRLO',       position: 'CM',  nation: '🇮🇹', club: 'Juventus',    ovr: 87, tier: 'gold',   sofifaId: 138956, fifaVersion: 17 },
-  { name: 'XAVI',        position: 'CM',  nation: '🇪🇸', club: 'Barcelona',   ovr: 89, tier: 'icon',   sofifaId: 41,     fifaVersion: 17 },
-  { name: 'INIESTA',     position: 'CM',  nation: '🇪🇸', club: 'Barcelona',   ovr: 89, tier: 'icon',   sofifaId: 152729, fifaVersion: 17 },
-  { name: 'LAHM',        position: 'RB',  nation: '🇩🇪', club: 'Bayern',      ovr: 88, tier: 'gold',   sofifaId: 1860,   fifaVersion: 14 },
   { name: 'NEUER',       position: 'GK',  nation: '🇩🇪', club: 'Bayern',      ovr: 89, tier: 'icon',   sofifaId: 167495, fifaVersion: 17 },
   { name: 'RIBÉRY',      position: 'LM',  nation: '🇫🇷', club: 'Bayern',      ovr: 89, tier: 'icon',   sofifaId: 156616, fifaVersion: 17 },
   { name: 'AGÜERO',      position: 'ST',  nation: '🇦🇷', club: 'Man City',    ovr: 89, tier: 'icon',   sofifaId: 153079, fifaVersion: 17 },
   { name: 'D. SILVA',    position: 'CAM', nation: '🇪🇸', club: 'Man City',    ovr: 86, tier: 'gold',   sofifaId: 168542, fifaVersion: 17 },
   { name: 'BALE',        position: 'LW',  nation: '🏴󠁧󠁢󠁷󠁬󠁳󠁿', club: 'Real Madrid', ovr: 88, tier: 'gold',   sofifaId: 173731, fifaVersion: 17 },
   { name: 'HAZARD',      position: 'LW',  nation: '🇧🇪', club: 'Chelsea',     ovr: 88, tier: 'gold',   sofifaId: 183277, fifaVersion: 17 },
-  { name: 'ÖZIL',        position: 'CAM', nation: '🇩🇪', club: 'Arsenal',     ovr: 86, tier: 'gold',   sofifaId: 178603, fifaVersion: 17 },
   { name: 'SUÁREZ',      position: 'ST',  nation: '🇺🇾', club: 'Barcelona',   ovr: 89, tier: 'icon',   sofifaId: 176580, fifaVersion: 17 },
   { name: 'KROOS',       position: 'CM',  nation: '🇩🇪', club: 'Real Madrid', ovr: 88, tier: 'gold',   sofifaId: 182521, fifaVersion: 17 },
   { name: 'MODRIĆ',      position: 'CM',  nation: '🇭🇷', club: 'Real Madrid', ovr: 88, tier: 'gold',   sofifaId: 177003, fifaVersion: 17 },
