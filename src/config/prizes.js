@@ -1,8 +1,9 @@
 // ── Real-world prizes ─────────────────────────────────────────────────────
 // These are the things players can ACTUALLY win when they open a pack.
-// The final ("walkout") card in each pack is drawn from this list.
+// The final ("walkout") card in each pack is drawn from this list, biased
+// by whichever pack the user chose to open (see config/packs.js).
 //
-// Tiers control card visuals AND draw weight:
+// Tiers control card visuals AND draw weight within the pack's tier roll:
 //   bronze  → most common, lowest OVR range
 //   silver  → uncommon
 //   gold    → rare
@@ -10,7 +11,7 @@
 //   special → 1-of-1 walkout, holographic
 //
 // To swap a prize: edit the row. To add one: copy a row and tweak.
-// Probabilities are auto-normalized so weights don't have to sum to 1.
+// `weight` only matters relative to other prizes of the SAME tier.
 // ──────────────────────────────────────────────────────────────────────────
 
 export const TIERS = {
@@ -22,34 +23,49 @@ export const TIERS = {
 };
 
 export const PRIZES = [
-  // ── BRONZE: snacks (most common) ────────────────────────────────────────
-  { id: 'daim',     name: 'DAIM',          emoji: '🍫', position: 'ST', nation: '🇸🇪', tier: 'bronze',  weight: 32 },
-  { id: 'kinder',   name: 'KINDER',        emoji: '🍫', position: 'ST', nation: '🇮🇹', tier: 'bronze',  weight: 32 },
+  // ── BRONZE: snacks ──────────────────────────────────────────────────────
+  { id: 'daim',     name: 'DAIM',          emoji: '🍫', position: 'ST',  nation: '🇸🇪', tier: 'bronze',  weight: 1 },
+  { id: 'kinder',   name: 'KINDER',        emoji: '🍫', position: 'ST',  nation: '🇮🇹', tier: 'bronze',  weight: 1 },
 
   // ── SILVER: better snacks / drinks ──────────────────────────────────────
-  { id: 'redbull',  name: 'RED BULL',      emoji: '🐂', position: 'CAM', nation: '🇦🇹', tier: 'silver',  weight: 14 },
-  { id: 'bar',      name: 'BAR',           emoji: '🍫', position: 'ST',  nation: '🇸🇪', tier: 'silver',  weight: 14 },
+  { id: 'redbull',  name: 'RED BULL',      emoji: '🐂', position: 'CAM', nation: '🇦🇹', tier: 'silver',  weight: 1 },
+  { id: 'bar',      name: 'BAR',           emoji: '🍫', position: 'ST',  nation: '🇸🇪', tier: 'silver',  weight: 1 },
 
   // ── GOLD: AIS merch ─────────────────────────────────────────────────────
-  { id: 'sticker',  name: 'AIS STICKER',   emoji: '🏷️', position: 'CB',  nation: '🇸🇪', tier: 'gold',    weight: 5 },
-  { id: 'pin',      name: 'AIS PIN',       emoji: '📌', position: 'CB',  nation: '🇸🇪', tier: 'gold',    weight: 2 },
+  { id: 'sticker',  name: 'AIS STICKER',   emoji: '🏷️', position: 'CB',  nation: '🇸🇪', tier: 'gold',    weight: 3 },
+  { id: 'pin',      name: 'AIS PIN',       emoji: '📌', position: 'CB',  nation: '🇸🇪', tier: 'gold',    weight: 1 },
 
   // ── ICON: hoodie / event entry ──────────────────────────────────────────
-  { id: 'hoodie',   name: 'AIS HOODIE',    emoji: '👕', position: 'CM',  nation: '🇸🇪', tier: 'icon',    weight: 0.8 },
-  { id: 'event',    name: 'EVENT TICKET',  emoji: '🎟️', position: 'CM',  nation: '🇸🇪', tier: 'icon',    weight: 0.15 },
+  { id: 'hoodie',   name: 'AIS HOODIE',    emoji: '👕', position: 'CM',  nation: '🇸🇪', tier: 'icon',    weight: 4 },
+  { id: 'event',    name: 'EVENT TICKET',  emoji: '🎟️', position: 'CM',  nation: '🇸🇪', tier: 'icon',    weight: 1 },
 
-  // ── SPECIAL: legendary walkout (the dream pull) ─────────────────────────
-  { id: 'board',    name: 'BOARD COFFEE',  emoji: '☕', position: 'GK',  nation: '🇸🇪', tier: 'special', weight: 0.05 },
+  // ── SPECIAL: legendary walkout ──────────────────────────────────────────
+  { id: 'board',    name: 'BOARD COFFEE',  emoji: '☕', position: 'GK',  nation: '🇸🇪', tier: 'special', weight: 1 },
 ];
 
-export function drawPrize() {
-  const total = PRIZES.reduce((s, p) => s + p.weight, 0);
-  let r = Math.random() * total;
-  for (const p of PRIZES) {
-    r -= p.weight;
-    if (r <= 0) return p;
+// Roll a tier from the pack's distribution, then weight-sample within it.
+export function drawPrize(pack) {
+  const dist = pack.prizeDist;
+  let r = Math.random();
+  let chosen = null;
+  for (const [tier, p] of Object.entries(dist)) {
+    r -= p;
+    if (r <= 0) { chosen = tier; break; }
   }
-  return PRIZES[0];
+  if (!chosen) chosen = 'bronze';
+
+  let candidates = PRIZES.filter((p) => p.tier === chosen);
+  if (candidates.length === 0) {
+    // Fall back to any tier with prizes if the pack ever specifies an empty tier.
+    candidates = PRIZES;
+  }
+  const total = candidates.reduce((s, p) => s + p.weight, 0);
+  let rr = Math.random() * total;
+  for (const p of candidates) {
+    rr -= p.weight;
+    if (rr <= 0) return p;
+  }
+  return candidates[0];
 }
 
 export function ovrFor(tier) {

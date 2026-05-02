@@ -3,7 +3,7 @@ import { Card } from './Card.jsx';
 
 // Reveals cards one at a time, last card = prize ("walkout").
 // Click anywhere to advance; auto-advances filler cards on a short timer.
-export function CardReveal({ cards, onDone }) {
+export function CardReveal({ cards, packTier, onDone }) {
   const [idx, setIdx] = useState(0);
   const [revealed, setRevealed] = useState(false);
 
@@ -32,11 +32,12 @@ export function CardReveal({ cards, onDone }) {
   }
 
   const current = cards[idx];
+  const glowTier = isLast ? current.tier : packTier;
 
   return (
     <div className="reveal" onClick={advance} role="presentation">
       {isLast && revealed && (
-        <div className={`reveal__walkout-glow reveal__walkout-glow--${current.tier}`} aria-hidden="true" />
+        <div className={`reveal__walkout-glow reveal__walkout-glow--${glowTier}`} aria-hidden="true" />
       )}
 
       <div className="reveal__stage">

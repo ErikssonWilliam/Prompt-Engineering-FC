@@ -1,9 +1,12 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 // FIFA-style card. Tier controls colors. `revealed` flips the card open.
 // `walkout` adds the dramatic glow + scale used for the prize reveal.
-export function Card({ data, revealed = true, walkout = false, onClick }) {
-  const { name, position, nation, club, ovr, tier, emoji } = data;
+// Tries to load a real player image; falls back to emoji on error.
+export function Card({ data, revealed = true, walkout = false, onClick, compact = false }) {
+  const { name, position, nation, club, ovr, tier, emoji, image } = data;
+  const [imgFailed, setImgFailed] = useState(false);
+  const showImage = image && !imgFailed;
 
   return (
     <button
@@ -14,6 +17,7 @@ export function Card({ data, revealed = true, walkout = false, onClick }) {
         `card--${tier}`,
         revealed ? 'card--revealed' : 'card--hidden',
         walkout ? 'card--walkout' : '',
+        compact ? 'card--compact' : '',
       ].join(' ')}
       aria-label={`${name} ${ovr}`}
     >
@@ -29,7 +33,17 @@ export function Card({ data, revealed = true, walkout = false, onClick }) {
           </div>
 
           <div className="card__art" aria-hidden="true">
-            <span className="card__emoji">{emoji ?? '⚽'}</span>
+            {showImage ? (
+              <img
+                src={image}
+                alt=""
+                className="card__img"
+                onError={() => setImgFailed(true)}
+                loading="lazy"
+              />
+            ) : (
+              <span className="card__emoji">{emoji ?? '⚽'}</span>
+            )}
           </div>
 
           <div className="card__name">{name}</div>

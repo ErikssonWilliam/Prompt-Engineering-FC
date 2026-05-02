@@ -4,32 +4,33 @@ import { drawPlayers } from '../config/players.js';
 
 const FILLERS_PER_PACK = 4;
 
-// State machine: 'idle' → 'opening' → 'idle'
-// Builds a deck of FILLERS_PER_PACK random nostalgic players plus
-// one randomly-drawn prize card at the end (the walkout).
-export function usePackOpen() {
+// State machine: 'idle' → 'opening' → 'idle'.
+// Builds a deck of filler players plus one prize "walkout" card,
+// drawn from the chosen pack's tier distribution.
+export function usePackOpen({ onComplete } = {}) {
   const [phase, setPhase] = useState('idle');
   const [deck, setDeck] = useState([]);
-  const [history, setHistory] = useState([]);
+  const [pack, setPack] = useState(null);
 
-  const open = useCallback(() => {
+  const open = useCallback((selectedPack) => {
     const fillers = drawPlayers(FILLERS_PER_PACK);
-    const prize = drawPrize();
+    const prize = drawPrize(selectedPack);
     const prizeCard = {
       ...prize,
       ovr: ovrFor(prize.tier),
       isPrize: true,
     };
     setDeck([...fillers, prizeCard]);
+    setPack(selectedPack);
     setPhase('opening');
   }, []);
 
   const finish = useCallback(() => {
-    const prize = deck[deck.length - 1];
-    if (prize) setHistory((h) => [prize, ...h].slice(0, 12));
+    if (deck.length && onComplete) onComplete(deck, pack);
     setPhase('idle');
     setDeck([]);
-  }, [deck]);
+    setPack(null);
+  }, [deck, pack, onComplete]);
 
-  return { phase, deck, history, open, finish };
+  return { phase, deck, pack, open, finish };
 }

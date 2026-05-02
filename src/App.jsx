@@ -1,11 +1,21 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Pack } from './components/Pack.jsx';
 import { CardReveal } from './components/CardReveal.jsx';
+import { Squad } from './components/Squad.jsx';
+import { Nav } from './components/Nav.jsx';
 import { usePackOpen } from './hooks/usePackOpen.js';
+import { useCollection } from './hooks/useCollection.js';
+import { PACK } from './config/packs.js';
 import './App.css';
 
 export default function App() {
-  const { phase, deck, history, open, finish } = usePackOpen();
+  const [tab, setTab] = useState('packs');
+  const collection = useCollection();
+  const { phase, deck, pack, open, finish } = usePackOpen({
+    onComplete: collection.addPack,
+  });
+
+  const squadCount = Object.keys(collection.players).length;
 
   return (
     <div className="app">
@@ -17,45 +27,28 @@ export default function App() {
       </div>
 
       <header className="header">
-        <div className="header__brand">
-          <div className="header__logo">AIS</div>
-          <div className="header__text">
-            <div className="header__org">LiU AI Society</div>
-            <div className="header__sub">Pack Opener</div>
-          </div>
-        </div>
+        <Nav active={tab} onChange={setTab} squadCount={squadCount} />
       </header>
 
       <main className="main">
-        {phase === 'idle' && (
-          <>
-            <Pack onOpen={open} busy={false} />
-            <p className="tagline">Open packs. Win snacks. Discover legends.</p>
-          </>
+        {tab === 'packs' && phase === 'idle' && (
+          <Pack onOpen={() => open(PACK)} busy={false} />
         )}
 
-        {phase === 'opening' && deck.length > 0 && (
-          <CardReveal cards={deck} onDone={finish} />
+        {tab === 'packs' && phase === 'opening' && deck.length > 0 && (
+          <CardReveal cards={deck} packTier={pack?.tier} onDone={finish} />
+        )}
+
+        {tab === 'squad' && (
+          <Squad
+            players={collection.players}
+            prizes={collection.prizes}
+            onReset={collection.reset}
+          />
         )}
       </main>
 
-      {history.length > 0 && phase === 'idle' && (
-        <aside className="history">
-          <div className="history__title">Recent pulls</div>
-          <ul className="history__list">
-            {history.map((p, i) => (
-              <li key={i} className={`history__item history__item--${p.tier}`}>
-                <span className="history__ovr">{p.ovr}</span>
-                <span className="history__name">{p.name}</span>
-              </li>
-            ))}
-          </ul>
-        </aside>
-      )}
-
-      <footer className="footer">
-        liuais.com · made for the lunch crew
-      </footer>
+      <footer className="footer">liuais.com</footer>
     </div>
   );
 }

@@ -13,7 +13,7 @@ export function Pack({ onOpen, busy }) {
       <div className="pack__glow" aria-hidden="true" />
       <div className="pack__face">
         <div className="pack__brand">LiU AI Society</div>
-        <div className="pack__title">PACK OPENER</div>
+        <div className="pack__title">AIS PACK</div>
         <div className="pack__divider" />
         <div className="pack__cta">{busy ? 'Opening…' : 'Click to open'}</div>
       </div>
