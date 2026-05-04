@@ -18,6 +18,10 @@
   --special-1: #ff7ad9;
   --special-2: #5b8def;
   --special-3: #00e0d3;
+  --legend-1: #fff4b0;
+  --legend-2: #d4a017;
+  --legend-3: #1a0e02;
+  --legend-accent: #ff3b3b;
 }
 
 * { box-sizing: border-box; }

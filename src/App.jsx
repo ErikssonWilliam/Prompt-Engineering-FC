@@ -43,6 +43,11 @@ export default function App() {
           <Squad
             players={collection.players}
             prizes={collection.prizes}
+            team={collection.team}
+            onPlace={collection.placePlayer}
+            onClear={collection.clearSlot}
+            onRemoveBench={collection.removeFromBench}
+            onSetFormation={collection.setFormation}
             onReset={collection.reset}
           />
         )}

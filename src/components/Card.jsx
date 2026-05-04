@@ -40,6 +40,7 @@ export function Card({ data, revealed = true, walkout = false, onClick, compact 
                 className="card__img"
                 onError={() => setImgFailed(true)}
                 loading="lazy"
+                draggable={false}
               />
             ) : (
               <span className="card__emoji">{emoji ?? '⚽'}</span>
